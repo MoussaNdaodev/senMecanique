@@ -7,7 +7,7 @@ Si vous recherchez une solution pratique pour mettre en relation des mécanicien
 **senMecanique** est une application web conçue pour faciliter la recherche de mécaniciens et de garages au Sénégal. Elle permet aux utilisateurs de trouver rapidement un mécanicien qualifié selon leur localisation, d'accéder à des services d'assistance en ligne, et de faire l'achat de pièces détachées pour moteurs.
 
 ![image alt](https://github.com/MoussaNdaodev/senMecanique/blob/master/page%20d'acceuil.png?raw=true)
-![image alt](https://github.com/MoussaNdaodev/senMecanique/blob/master/page%20d'acceuil.png?raw=true)
+![image alt](https://github.com/MoussaNdaodev/senMecanique/blob/master/page%20d'acceuil%20suite.png?raw=true)
 ![image alt](https://github.com/MoussaNdaodev/senMecanique/blob/master/page%20d'acceuil.png?raw=true)
 ![image alt](https://github.com/MoussaNdaodev/senMecanique/blob/master/page%20d'acceuil.png?raw=true)
 
