@@ -1,6 +1,6 @@
-# Dockerfile
+# Dockerfile pour Laravel sur Render
 
-FROM php:8.2-fpm
+FROM php:8.2-cli
 
 # Arguments optionnels
 ARG COMPOSER_ALLOW_SUPERUSER=1
@@ -51,8 +51,8 @@ RUN mkdir -p storage bootstrap/cache \
 # Installer les dépendances PHP avec Composer
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Exposer le port PHP-FPM
-EXPOSE 9000
+# Exposer le port HTTP pour Render
+EXPOSE 10000
 
-# Lancer PHP-FPM
-CMD ["php-fpm"]
+# Lancer le serveur intégré de Laravel
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=10000"]
