@@ -5,7 +5,7 @@ FROM php:8.2-fpm
 # Arguments optionnels
 ARG COMPOSER_ALLOW_SUPERUSER=1
 
-# Installer les dépendances système
+# Installer les dépendances système et PHP nécessaires
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -20,22 +20,24 @@ RUN apt-get update && apt-get install -y \
     libicu-dev \
     libpq-dev \
     pkg-config \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install \
-        pdo \
-        pdo_mysql \
-        mbstring \
-        bcmath \
-        gd \
-        intl \
-        zip \
-        xml \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    libexif-dev \
+ && docker-php-ext-configure gd --with-freetype --with-jpeg \
+ && docker-php-ext-install -j$(nproc) \
+    pdo \
+    pdo_mysql \
+    mbstring \
+    bcmath \
+    gd \
+    intl \
+    zip \
+    xml \
+    exif \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Installer Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
-# Créer le dossier du projet
+# Définir le dossier du projet
 WORKDIR /var/www/html
 
 # Copier le projet
@@ -46,7 +48,7 @@ RUN mkdir -p storage bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-# Installer les dépendances PHP
+# Installer les dépendances PHP avec Composer
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Exposer le port PHP-FPM
