@@ -2,12 +2,12 @@
     "private": true,
     "scripts": {
         "dev": "npm run development",
-        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "watch": "npm run development -- --watch",
-        "watch-poll": "npm run watch -- --watch-poll",
-        "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --disable-host-check --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "development": "cross-env NODE_ENV=development mix",
+        "watch": "cross-env NODE_ENV=development mix watch",
+        "watch-poll": "cross-env NODE_ENV=development mix watch -- --watch-poll",
+        "hot": "cross-env NODE_ENV=development mix watch --hot",
         "prod": "npm run production",
-        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+        "production": "cross-env NODE_ENV=production mix --production"
     },
     "devDependencies": {
         "axios": "^1.7.7",
@@ -21,7 +21,8 @@
         "sass": "^1.20.1",
         "sass-loader": "^8.0.0",
         "vue": "^3.4.35",
-        "vue-template-compiler": "^0.1.0"
+        "vue-loader": "^17.0.0",
+        "vue-template-compiler": "^2.6.14"
     },
     "dependencies": {
         "@babel/plugin-transform-object-rest-spread": "^7.24.7",
