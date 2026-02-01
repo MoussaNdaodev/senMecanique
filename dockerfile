@@ -1,15 +1,21 @@
-# Dockerfile Laravel + PostgreSQL + Vite pour Render
+# Dockerfile Laravel + PostgreSQL + Laravel Mix pour Render
 
 FROM php:8.2-cli
 
 ARG COMPOSER_ALLOW_SUPERUSER=1
 
-# Installer dépendances système + PostgreSQL + Node/NPM pour Vite
+# Installer dépendances système + PostgreSQL + Node.js/NPM
 RUN apt-get update && apt-get install -y \
     git unzip zip curl \
-    libzip-dev libpng-dev libjpeg-dev libfreetype6-dev \
-    libonig-dev libxml2-dev libicu-dev libpq-dev pkg-config \
-    libexif-dev nodejs npm \
+    libzip-dev \
+    libpng-dev libjpeg-dev libfreetype6-dev \
+    libonig-dev \
+    libxml2-dev \
+    libicu-dev \
+    libpq-dev \
+    pkg-config \
+    libexif-dev \
+    nodejs npm \
  && docker-php-ext-configure gd --with-freetype --with-jpeg \
  && docker-php-ext-install \
     pdo \
@@ -21,8 +27,7 @@ RUN apt-get update && apt-get install -y \
     zip \
     xml \
     exif \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Installer Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
@@ -33,7 +38,7 @@ WORKDIR /var/www/html
 # Copier le projet
 COPY . .
 
-# 🔥 Créer TOUS les dossiers requis par Laravel
+# Créer tous les dossiers Laravel requis
 RUN mkdir -p \
     storage/framework/sessions \
     storage/framework/views \
@@ -45,9 +50,11 @@ RUN mkdir -p \
 # Installer dépendances PHP Laravel
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Installer dépendances JS et builder les assets Vite
+# Installer dépendances JS
 RUN npm install
-RUN npm run build
+
+# Builder les assets avec Laravel Mix
+RUN npm run production
 
 # Nettoyer caches Laravel
 RUN php artisan config:clear \
@@ -55,8 +62,8 @@ RUN php artisan config:clear \
  && php artisan route:clear \
  && php artisan view:clear
 
-# Exposer le port pour Render
+# Exposer le port HTTP pour Render
 EXPOSE 10000
 
-# Lancer Laravel sur le port dynamique fourni par Render
+# Lancer Laravel avec le port dynamique Render
 CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT}"]
