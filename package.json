@@ -7,7 +7,7 @@
         "watch-poll": "cross-env NODE_ENV=development mix watch -- --watch-poll",
         "hot": "cross-env NODE_ENV=development mix watch --hot",
         "prod": "npm run production",
-        "production": "cross-env NODE_ENV=production mix --production"
+        "production": "NODE_ENV=production mix --production"
     },
     "devDependencies": {
         "axios": "^1.7.7",
@@ -21,7 +21,7 @@
         "sass": "^1.20.1",
         "sass-loader": "^8.0.0",
         "vue": "^3.4.35",
-        "vue-loader": "^17.0.0",
+        "vue-loader": "^17.4.2",
         "vue-template-compiler": "^2.6.14"
     },
     "dependencies": {
