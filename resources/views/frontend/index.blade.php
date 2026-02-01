@@ -97,7 +97,7 @@
                                     // dd($categories);
                                 @endphp
                                 @if($categories)
-                                <button class="btn" style="background:black"data-filter="*">
+                                <button class="btn text-light" style="background:red"data-filter="*">
                                     Tous les produits
                                 </button>
                                     @foreach($categories as $key=>$cat)
