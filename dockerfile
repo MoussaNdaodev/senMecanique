@@ -3,14 +3,14 @@ FROM php:8.2-cli
 
 ARG COMPOSER_ALLOW_SUPERUSER=1
 
-# Installer dépendances système + PostgreSQL + Node.js 18
+# Installer Node.js 20 (au lieu de 18 pour éviter les erreurs de moteur)
 RUN apt-get update && apt-get install -y \
     git unzip zip curl \
     libzip-dev libpng-dev libjpeg-dev libfreetype6-dev \
     libonig-dev libxml2-dev libicu-dev \
     libpq-dev pkg-config libexif-dev \
-    gnupg \
- && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    gnupg ca-certificates \
+ && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
  && apt-get install -y nodejs \
  && docker-php-ext-configure gd --with-freetype --with-jpeg \
  && docker-php-ext-install \
@@ -31,7 +31,17 @@ COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 # Dossier de travail
 WORKDIR /var/www/html
 
-# Copier le projet
+# Copier les fichiers de dépendances d'abord
+COPY package*.json ./
+COPY composer.json composer.lock* ./
+
+# Installer dépendances PHP Laravel
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Installer dépendances NPM (sans --production pour avoir devDependencies)
+RUN npm install --legacy-peer-deps
+
+# Copier le reste du projet
 COPY . .
 
 # Créer tous les dossiers Laravel requis
@@ -43,13 +53,7 @@ RUN mkdir -p \
     bootstrap/cache \
  && chmod -R 775 storage bootstrap/cache
 
-# Installer dépendances PHP Laravel
-RUN composer install --no-dev --optimize-autoloader --no-interaction
-
-# Installer dépendances JS avec force
-RUN npm ci --only=production || npm install --production
-
-# Builder les assets avec Laravel Mix (nouvelle commande)
+# Builder les assets avec Laravel Mix
 RUN npm run prod
 
 # Nettoyer caches Laravel
