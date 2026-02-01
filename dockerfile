@@ -60,4 +60,6 @@ RUN php artisan config:clear \
 EXPOSE 10000
 
 # Lancer Laravel avec le port dynamique Render
-CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=${PORT}"]
+EXPOSE 10000
+
+CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT}"]
