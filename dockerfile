@@ -1,21 +1,18 @@
-# Dockerfile Laravel + PostgreSQL + Laravel Mix pour Render
+# Dockerfile Laravel + PostgreSQL + Mix pour Render
 
 FROM php:8.2-cli
 
 ARG COMPOSER_ALLOW_SUPERUSER=1
 
-# Installer dépendances système + PostgreSQL + Node.js/NPM
+# Installer dépendances système + PostgreSQL + Node.js 18
 RUN apt-get update && apt-get install -y \
     git unzip zip curl \
-    libzip-dev \
-    libpng-dev libjpeg-dev libfreetype6-dev \
-    libonig-dev \
-    libxml2-dev \
-    libicu-dev \
-    libpq-dev \
-    pkg-config \
-    libexif-dev \
-    nodejs npm \
+    libzip-dev libpng-dev libjpeg-dev libfreetype6-dev \
+    libonig-dev libxml2-dev libicu-dev \
+    libpq-dev pkg-config libexif-dev \
+    gnupg \
+ && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+ && apt-get install -y nodejs \
  && docker-php-ext-configure gd --with-freetype --with-jpeg \
  && docker-php-ext-install \
     pdo \
@@ -66,4 +63,4 @@ RUN php artisan config:clear \
 EXPOSE 10000
 
 # Lancer Laravel avec le port dynamique Render
-CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT}"]
+CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
