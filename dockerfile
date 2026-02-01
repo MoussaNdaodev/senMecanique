@@ -31,13 +31,13 @@ COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 # Définir le répertoire de travail
 WORKDIR /var/www/html
 
-# Copier tout le projet **avant** l'installation des dépendances
+# Copier tout le projet
 COPY . .
 
 # Installer dépendances PHP Laravel
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Installer dépendances NPM (sans --production pour devDependencies)
+# Installer dépendances NPM
 RUN npm install --legacy-peer-deps
 
 # Créer tous les dossiers Laravel requis
@@ -58,8 +58,11 @@ RUN php artisan config:clear \
  && php artisan route:clear \
  && php artisan view:clear
 
+# 🔹 Créer le storage link pour les images
+RUN php artisan storage:link
+
 # Exposer le port HTTP pour Render
 EXPOSE 10000
 
-# Lancer Laravel avec le port dynamique Render
+# Lancer Laravel avec migration, seed et serveur
 CMD ["sh", "-c", "php artisan migrate --force && php artisan db:seed --force && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
