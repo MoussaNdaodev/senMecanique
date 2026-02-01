@@ -31,6 +31,7 @@
                         <!-- Form -->
                         <form class="form" method="post" action="{{route('login.submit')}}">
                             @csrf
+                            {{ route('login.submit') }}
                             <div class="row">
                                 <div class="col-12">
                                     <div class="form-group">
