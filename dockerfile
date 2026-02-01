@@ -1,5 +1,4 @@
 # Dockerfile Laravel + PostgreSQL + Mix pour Render
-
 FROM php:8.2-cli
 
 ARG COMPOSER_ALLOW_SUPERUSER=1
@@ -47,11 +46,11 @@ RUN mkdir -p \
 # Installer dépendances PHP Laravel
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Installer dépendances JS
-RUN npm install
+# Installer dépendances JS avec force
+RUN npm ci --only=production || npm install --production
 
-# Builder les assets avec Laravel Mix
-RUN npm run production
+# Builder les assets avec Laravel Mix (nouvelle commande)
+RUN npm run prod
 
 # Nettoyer caches Laravel
 RUN php artisan config:clear \
